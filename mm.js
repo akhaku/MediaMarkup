@@ -17,23 +17,14 @@ $(document).ready(function() {
         $("#toggle").html("Play");
     };
 
-    function insert_comment() {
-        if( $("#master").html() == "" ) {
-            // Simple Insert
-        } else {
-            // Not so Simple Insert
-    };
-
-    $("#toggle").click(function() {           // Play/Pause Toggle ===============
+    $("#toggle").click(function() {         // Play/Pause Toggle ===============
         if( $("#toggle").html() == "Play" ) smart_play();
         else smart_pause();
     });
 
     $("#comment").click(function() {        // Comment Button ==================
         if( $("#toggle").html() == "Pause" ) smart_pause();
-//        var comm_input = $("<form></form>").addId("comm_form");
-//        comm_input.children().append("<input />").
-        insert_comment(video.currentTime,"Comment added.");
+        // Code to insert comment live goes here
     });
 
 });
