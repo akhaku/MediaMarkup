@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>MediaMarkup 2</title>
+        <title>MediaMarkup Player</title>
         <link rel="stylesheet" type="text/css" href="css/reset.css" />
         <link rel="stylesheet" type="text/css" href="css/rules.css" />
         <link rel="stylesheet" type="text/css" href="css/video-js-2.0.2.css" />
         <script
             src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"
             type="text/javascript"></script>
-        <script src="js/mm.js" type="text/javascript"></script>
     </head>
     <body>
+        <h2>MediaMarkupPlayer</h2>
         <div id="container">
-            <video id="video" height="320" autobuffer preload="auto">
+            <video id="video" height="320" autobuffer controls preload="auto">
                 <!-- Video source DOM to be modified via JSP => MySQL -->
                 <source id="mp4_src" src="bbb.mp4" type="video/mp4" />
                 <source id="ogg_src" src="bbb.ogg" type="video/ogg" />
@@ -20,14 +20,14 @@
             </video>
         </div>
         <div id="controls">
-            <button id="toggle">Play</button>       <!-- Play/Pause Toggle -->
             <button id="comment">Comment</button>   <!-- Comment Button -->
             <span id="video-time"></span>           <!-- Video Time Display -->
-        </div>
+        </div><br />
         <div id="comments">
             <ul class="thread" id="master">
                 <!-- Nested lists with class="thread" and id="timestamp" -->
                 <!-- Loaded via JSP => MySQL, new inserts via mm.js -->
             </ul>
-        </body>
-    </html>
+        <script src="js/mm.js" type="text/javascript"></script>
+    </body>
+</html>
