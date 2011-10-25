@@ -3,3 +3,12 @@ div.video-js-box {
     margin-right: auto;
     margin-top: 50px;
 }
+
+span.timestamp {
+    color: blue;
+    cursor: pointer;
+}
+
+span.timestamp:hover {
+    text-decoration: underline;
+}
