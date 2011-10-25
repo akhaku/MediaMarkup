@@ -1,9 +1,12 @@
 # MediaMarkup in HTML5 #
 Authors: akhaku (Ammar Khaku)
+         srattan (Seth Rattan)
 
 MediaMarkup is a tool in use at
 [Tufts University](https://spark.uit.tufts.edu/video_view2.jsp?id=1) that is
 used for, among other things, annotating videos at specific timestamps. The
 version in active use uses Flash (ew), and this project is intended as a
-replacement, built using modern web technologies i.e. HTML5
+replacement, built using modern web technologies i.e. HTML5.
 
+Credit to Steve Heffernan for his work on [VideoJS](http://videojs.com/), which
+is currently being used by MediaMarkup HTML5.
