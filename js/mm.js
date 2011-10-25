@@ -1,4 +1,9 @@
 $(document).ready(function() {
+VideoJS.DOMReady(function(){
+var video = VideoJS.setup("video");
+});
+});
+/*$(document).ready(function() {
 
     $("video").bind("timeupdate",function() {
         var min = Math.floor(video.currentTime/60);
@@ -27,4 +32,4 @@ $(document).ready(function() {
         // Code to insert comment live goes here
     });
 
-});
+});*/
