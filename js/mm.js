@@ -1,89 +1,76 @@
-$(document).ready(function() {
-    VideoJS.DOMReady(function(){
-        var video = VideoJS.setup("video");
-    });
-});
-
-$(document).ready(function() {
-    $('button#comment').click(function(){
-        if($('textarea').get(0)) {
-            return;
-        }
-        video.pause();
-        var time = video.currentTime;
-        $('ul#master').append('<li><textarea rel="'+time+'"></textarea>'+
-            '<button id="comment-save">Save</button>'+
-            '<button id="comment-cancel">Cancel</button></li>');
-        $('textarea').focus();
-        $('#comment-save').click(function(){
-            saveComment(this);
-        });
-        var parentLi = $('textarea').closest('li');
-        $('#comment-cancel').click(function(){
-            parentLi.remove();
-        });
-    });
-
-    function saveComment(e) {
-        //escape js here? also guard against XSS
-        var parentLi = $(e).closest('li');
-        var comment = $('textarea', parentLi).val();
-        var time = $('textarea', parentLi).attr('rel');
-        parentLi.html('<span class="timestamp">'+secondsToTime(time)+'</span> - ' + comment);
-        $('.timestamp', parentLi).click(function(){
-             video.currentTime=time;
-        });
-    }
-});
-
-function secondsToTime(secs)
-{
-    var hours = Math.floor(secs / (60 * 60));
-    var divisor_for_minutes = secs % (60 * 60);
-    var minutes = Math.floor(divisor_for_minutes / 60);
-    var divisor_for_seconds = divisor_for_minutes % 60;
-    var seconds = Math.ceil(divisor_for_seconds);
-    var obj = {
-        "h": hours,
-        "m": minutes,
-        "s": seconds
-    };
-    if (seconds < 10) { seconds = "0"+seconds; }
-    var str = minutes+":"+seconds;
-    if (hours != 0) {
-        if (minutes < 10) { str = "0"+str; }
-        str = hours+":"+str;
-    }
-    return str;
+function getMin() {
+    /* Get video.currentTime as minutes */
+    var min = Math.floor(video.currentTime / 60);
+    if( min < 10 ) min = "0" + min;
+    return min;
 }
 
-/*$(document).ready(function() {
+function getSec() {
+    /* Get video.currentTime as seconds (remainder) */
+    var sec = Math.floor(video.currentTime % 60);
+    if( sec < 10 ) sec = "0" + sec;
+    return sec;
+}
 
-  $("video").bind("timeupdate",function() {
-  var min = Math.floor(video.currentTime/60);
-  var sec = Math.floor(video.currentTime%60);
-  if( sec < 10 ) sec = "0" + sec;
-  $("#timecode").html(min+":"+sec);
-  });
+function togglePlay() {
+    /* Play video and toggle button to Pause */
+    video.play();
+    $('button#toggle').html("Pause");
+};
 
-  function smart_play() {                 // A smart play function ===========
-  video.play();
-  $("#toggle").html("Pause");
-  };
+function togglePause() {
+    /* Pause video and toggle button to Play */
+    video.pause();
+    $('button#toggle').html("Play");
+};
 
-  function smart_pause() {                // A smart pause function ==========
-  video.pause();
-  $("#toggle").html("Play");
-  };
+$(document).ready(function() {
 
-  $("#toggle").click(function() {         // Play/Pause Toggle ===============
-  if( $("#toggle").html() == "Play" ) smart_play();
-  else smart_pause();
-  });
+    $('video').bind('timeupdate',function() {
+        /* Update the video time display */
+        $('span#video-time').html(getMin() + ":" + getSec());
+    });
 
-  $("#comment").click(function() {        // Comment Button ==================
-  if( $("#toggle").html() == "Pause" ) smart_pause();
-// Code to insert comment live goes here
+
+    $('#toggle').click(function() {
+        /* Toggle video between play and pause */
+        if( $('button#toggle').html() == 'Play' ) togglePlay();
+        else togglePause();
+    });
+
+    $('#comment').click(function() {
+        /* Open the comment entry dialog, pause the video */
+        if( $('button#toggle').html() == 'Pause' ) togglePause();
+        if( $('textarea').get(0) ) return;
+        $('div#controls').append(
+            '<span id="comment-add">' +
+                '<textarea id="comment-text"></textarea>' +
+                '<button id="comment-save">Save</button>' +
+                '<button id="comment-cancel">Cancel</button>' +
+            '</span>'
+        );
+        $('textarea').focus();
+        $('button#comment-save').click(function() {
+            /* Display the comment and save it to the database */
+            $('ul#master').append(
+                '<li>' +
+                    '<span class="timestamp" rel="' + video.currentTime + '">' +
+                        getMin() + ':' + getSec() +
+                    '</span> - ' + $('#comment-text').val() +
+                '</li>'
+            );
+            $('span.timestamp').click(function() {
+                /* Jump the video to the timestamp */
+                if( $('button#toggle').html() == 'Pause' ) togglePause();
+                video.currentTime = $(this).attr('rel');
+            });
+            $('span#comment-add').remove();
+        });
+        $('button#comment-cancel').click(function() {
+            /* Cancel the comment */
+            $('span#comment-add').remove();
+        });
+    });
+
+
 });
-
-});*/
