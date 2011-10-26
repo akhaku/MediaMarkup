@@ -1,10 +1,8 @@
 $(document).ready(function() {
+    var video;
     VideoJS.DOMReady(function(){
-        var video = VideoJS.setup("video");
+        video = VideoJS.setup("video");
     });
-});
-
-$(document).ready(function() {
     $('button#comment').click(function(){
         if($('textarea').get(0)) {
             return;
