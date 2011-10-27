@@ -1,39 +1,39 @@
-$(document).ready(function() {
-    var video;
-    VideoJS.DOMReady(function(){
-        video = VideoJS.setup("video");
-    });
-    $('button#comment').click(function(){
-        if($('textarea').get(0)) {
-            return;
-        }
-        video.pause();
-        var time = video.currentTime;
-        $('ul#master').append('<li><textarea rel="'+time+'"></textarea>'+
-            '<button id="comment-save">Save</button>'+
-            '<button id="comment-cancel">Cancel</button></li>');
-        $('textarea').focus();
-        $('#comment-save').click(function(){
-            saveComment(this);
-        });
-        var parentLi = $('textarea').closest('li');
-        $('#comment-cancel').click(function(){
-            parentLi.remove();
-        });
-    });
-
-    function saveComment(e) {
-        //escape js here? also guard against XSS
-        var parentLi = $(e).closest('li');
-        var comment = $('textarea', parentLi).val();
-        var time = $('textarea', parentLi).attr('rel');
-        parentLi.html('<span class="timestamp">'+secondsToTime(time)+'</span> - ' + comment);
-        $('.timestamp', parentLi).click(function(){
-             video.currentTime=time;
-        });
-    }
+var video;
+VideoJS.DOMReady(function(){
+    video = VideoJS.setup("video");
 });
 
+$(document).ready(function() {
+    $('div#comment-box *').hide();
+    $('button#comment-button').click(function(){
+        $('div#comment-box *').show();
+        $('button#comment-button').hide();
+        video.pause();
+        $('textarea').focus();
+    });
+    $('#comment-save').click(function() {
+        saveComment();
+    });
+    $('#comment-cancel').click(function() {
+        $('textarea').val('');   
+        $('div#comment-box *').hide();
+        $('button#comment-button').show();
+    });
+
+});
+
+function saveComment() {
+    video = VideoJS.setup("video");
+    //escape js here? also guard against XSS
+    var comment = $('textarea').val();
+    var time = video.currentTime();
+    console.log('Saving comment ' + comment);
+    console.log('Saving timestamp ' + time);
+    //parentLi.html('<span class="timestamp">'+secondsToTime(time)+'</span> - ' + comment);
+    //$('.timestamp', parentLi).click(function(){
+    //    video.currentTime=time;
+    //});
+}
 function secondsToTime(secs)
 {
     var hours = Math.floor(secs / (60 * 60));
