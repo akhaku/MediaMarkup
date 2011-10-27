@@ -15,24 +15,31 @@ $(document).ready(function() {
         saveComment();
     });
     $('#comment-cancel').click(function() {
-        $('textarea').val('');   
-        $('div#comment-box *').hide();
-        $('button#comment-button').show();
+        closeCommentBox();
     });
 
 });
+
+function closeCommentBox() {
+    $('textarea').val('');   
+    $('div#comment-box *').hide();
+    $('button#comment-button').show();
+}
 
 function saveComment() {
     video = VideoJS.setup("video");
     //escape js here? also guard against XSS
     var comment = $('textarea').val();
-    var time = video.currentTime();
-    console.log('Saving comment ' + comment);
-    console.log('Saving timestamp ' + time);
-    //parentLi.html('<span class="timestamp">'+secondsToTime(time)+'</span> - ' + comment);
-    //$('.timestamp', parentLi).click(function(){
-    //    video.currentTime=time;
-    //});
+    var timeStr = secondsToTime(video.currentTime());
+    var commentLi = '<li><span class="timestamp">'
+                +timeStr+'</span> - ' + comment+'</li>';
+    // find place for the li element to go
+    if(!$('ul#master li').get(0)) {
+        $('ul#master').html(commentLi);
+    } else {
+        $('ul#master li:last-child').append(commentLi);
+    }
+    closeCommentBox();
 }
 function secondsToTime(secs)
 {
@@ -41,11 +48,6 @@ function secondsToTime(secs)
     var minutes = Math.floor(divisor_for_minutes / 60);
     var divisor_for_seconds = divisor_for_minutes % 60;
     var seconds = Math.ceil(divisor_for_seconds);
-    var obj = {
-        "h": hours,
-        "m": minutes,
-        "s": seconds
-    };
     if (seconds < 10) { seconds = "0"+seconds; }
     var str = minutes+":"+seconds;
     if (hours != 0) {
@@ -54,34 +56,3 @@ function secondsToTime(secs)
     }
     return str;
 }
-
-/*$(document).ready(function() {
-
-  $("video").bind("timeupdate",function() {
-  var min = Math.floor(video.currentTime/60);
-  var sec = Math.floor(video.currentTime%60);
-  if( sec < 10 ) sec = "0" + sec;
-  $("#timecode").html(min+":"+sec);
-  });
-
-  function smart_play() {                 // A smart play function ===========
-  video.play();
-  $("#toggle").html("Pause");
-  };
-
-  function smart_pause() {                // A smart pause function ==========
-  video.pause();
-  $("#toggle").html("Play");
-  };
-
-  $("#toggle").click(function() {         // Play/Pause Toggle ===============
-  if( $("#toggle").html() == "Play" ) smart_play();
-  else smart_pause();
-  });
-
-  $("#comment").click(function() {        // Comment Button ==================
-  if( $("#toggle").html() == "Pause" ) smart_pause();
-// Code to insert comment live goes here
-});
-
-});*/
