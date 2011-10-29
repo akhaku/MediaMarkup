@@ -30,14 +30,24 @@ function saveComment() {
     video = VideoJS.setup("video");
     //escape js here? also guard against XSS
     var comment = $('textarea').val();
-    var timeStr = secondsToTime(video.currentTime());
-    var commentLi = '<li><span class="timestamp">'
-                +timeStr+'</span> - ' + comment+'</li>';
+    var time = video.currentTime();
+    var timeStr = secondsToTime(time);
+    var commentLi = '<li><span class="timestamp" rel="'+time+'">'
+        +timeStr+'</span> - ' + comment+'</li>';
     // find place for the li element to go
     if(!$('ul#master li').get(0)) {
         $('ul#master').html(commentLi);
     } else {
-        $('ul#master li:last-child').append(commentLi);
+        $.each($('ul#master li'),function(index) {
+            elem = $($('ul#master li').get(index));
+            if ($('.timestamp', elem).attr('rel') > time) {
+                $(elem).before(commentLi);
+                return false;
+            }
+            if (index == $('ul#master li').length-1) {
+                $('ul#master li:last-child').after(commentLi);
+            }
+        });
     }
     closeCommentBox();
 }
