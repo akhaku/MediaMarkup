@@ -17,7 +17,6 @@ $(document).ready(function() {
     $('#comment-cancel').click(function() {
         closeCommentBox();
     });
-
 });
 
 function closeCommentBox() {
@@ -29,25 +28,31 @@ function closeCommentBox() {
 function saveComment() {
     /* save comment to database and print it to screen in sorted order */
     video = VideoJS.setup("video");
+    var commentTime = video.currentTime();
     //escape js here? also guard against XSS
-    var comment = $('textarea').val();
-    var time = video.currentTime();
-    var timeStr = secondsToTime(time);
-    var commentLi = '<li>' +
-                        '<span class="timestamp" rel="' + time + '">' +
-                        timeStr + '</span> - ' + comment +
-                    '</li>';
+    var commentDOM = $('<li><span class="timestamp"></span> - <span ' +
+                       'class="comment"></li>');
+    $('span.timestamp', commentDOM).attr('rel', commentTime);
+    $('span.timestamp', commentDOM).html(secondsToTime(commentTime));
+    $('span.timestamp', commentDOM).click(function() {
+        /* move the video to the timestamp in rel */
+        video.currentTime($('.timestamp', commentDOM).attr('rel'));
+    });
+    $('span.comment', commentDOM).text($('textarea').val());
+
     if(!$('ul#master li').get(0)) {
-        $('ul#master').html(commentLi);
+        /* insert the comment into empty ul#master */
+        $('ul#master').append(commentDOM);
     } else {
+        /* insert the comment to ul#master in sorted order */
         $.each($('ul#master li'),function(index) {
             elem = $($('ul#master li').get(index));
-            if ($('.timestamp', elem).attr('rel') > time) {
-                $(elem).before(commentLi);
+            if ($('.timestamp', elem).attr('rel') > commentTime) {
+                $(elem).before(commentDOM);
                 return false;
             }
-            if (index == $('ul#master li').length-1) {
-                $('ul#master li:last-child').after(commentLi);
+            if (index == $('ul#master li').length - 1) {
+                $('ul#master li:last-child').after(commentDOM);
             }
         });
     }
