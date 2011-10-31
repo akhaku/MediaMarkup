@@ -29,14 +29,14 @@ function saveComment() {
     /* save comment to database and print it to screen in sorted order */
     video = VideoJS.setup("video");
     var commentTime = video.currentTime();
-    //escape js here? also guard against XSS
+    var commentTimeStr = secondsToTime(commentTime);
     var commentDOM = $('<li><span class="timestamp"></span> - <span ' +
                        'class="comment"></li>');
     $('span.timestamp', commentDOM).attr('rel', commentTime);
-    $('span.timestamp', commentDOM).html(secondsToTime(commentTime));
+    $('span.timestamp', commentDOM).html(commentTimeStr);
     $('span.timestamp', commentDOM).click(function() {
-        /* move the video to the timestamp in rel */
-        video.currentTime($('.timestamp', commentDOM).attr('rel'));
+        /* move video.currentTime() to the timestamp in rel */
+        video.currentTime($('span.timestamp', commentDOM).attr('rel'));
     });
     $('span.comment', commentDOM).text($('textarea').val());
 
@@ -44,8 +44,8 @@ function saveComment() {
         /* insert the comment into empty ul#master */
         $('ul#master').append(commentDOM);
     } else {
-        /* insert the comment to ul#master in sorted order */
         $.each($('ul#master li'),function(index) {
+            /* insert the comment to ul#master in sorted order */
             elem = $($('ul#master li').get(index));
             if ($('.timestamp', elem).attr('rel') > commentTime) {
                 $(elem).before(commentDOM);
