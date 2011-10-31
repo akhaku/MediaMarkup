@@ -1,7 +1,12 @@
 div.video-js-box {
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 50px;
+    margin-top: 12px;
+}
+
+div#comments {
+    position: absolute;
+    top: 0px;
+    left: 512px;
+    margin-top: 12px;
 }
 
 span.timestamp {
@@ -11,4 +16,8 @@ span.timestamp {
 
 span.timestamp:hover {
     text-decoration: underline;
+}
+
+textarea#comment-text {
+    width: 500px;
 }

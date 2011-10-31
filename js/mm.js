@@ -5,7 +5,7 @@ VideoJS.DOMReady(function(){
 
 $(document).ready(function() {
     $('div#comment-box *').hide();
-    $('button#comment-button').click(function(){
+    $('button#comment-button').click(function() {
         $('div#comment-box *').show();
         $('button#comment-button').hide();
         video.pause();
@@ -27,14 +27,16 @@ function closeCommentBox() {
 }
 
 function saveComment() {
+    /* save comment to database and print it to screen in sorted order */
     video = VideoJS.setup("video");
     //escape js here? also guard against XSS
     var comment = $('textarea').val();
     var time = video.currentTime();
     var timeStr = secondsToTime(time);
-    var commentLi = '<li><span class="timestamp" rel="'+time+'">'
-        +timeStr+'</span> - ' + comment+'</li>';
-    // find place for the li element to go
+    var commentLi = '<li>' +
+                        '<span class="timestamp" rel="' + time + '">' +
+                        timeStr + '</span> - ' + comment +
+                    '</li>';
     if(!$('ul#master li').get(0)) {
         $('ul#master').html(commentLi);
     } else {
@@ -50,19 +52,20 @@ function saveComment() {
         });
     }
     closeCommentBox();
+    // save the comment to the database here
 }
-function secondsToTime(secs)
-{
+
+function secondsToTime(secs) {
     var hours = Math.floor(secs / (60 * 60));
-    var divisor_for_minutes = secs % (60 * 60);
-    var minutes = Math.floor(divisor_for_minutes / 60);
-    var divisor_for_seconds = divisor_for_minutes % 60;
-    var seconds = Math.ceil(divisor_for_seconds);
-    if (seconds < 10) { seconds = "0"+seconds; }
+    var divisorMin = secs % (60 * 60);
+    var minutes = Math.floor(divisorMin / 60);
+    var divisorSec = divisorMin % 60;
+    var seconds = Math.ceil(divisorSec);
+    if (seconds < 10) { seconds = "0" + seconds; }
     var str = minutes+":"+seconds;
     if (hours != 0) {
-        if (minutes < 10) { str = "0"+str; }
-        str = hours+":"+str;
+        if (minutes < 10) { str = "0" + str; }
+        str = hours + ":" + str;
     }
     return str;
 }
