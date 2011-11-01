@@ -12,7 +12,7 @@ $(document).ready(function() {
         $('textarea').focus();
     });
     $('#comment-save').click(function() {
-        saveComment();
+        saveComment(video);
     });
     $('#comment-cancel').click(function() {
         closeCommentBox();
@@ -25,9 +25,8 @@ function closeCommentBox() {
     $('button#comment-button').show();
 }
 
-function saveComment() {
+function saveComment(video) {
     /* save comment to database and print it to screen in sorted order */
-    video = VideoJS.setup("video");
     var commentTime = video.currentTime();
     var commentTimeStr = secondsToTime(commentTime);
     var commentDOM = $('<li><span class="timestamp"></span> - <span ' +
@@ -57,7 +56,17 @@ function saveComment() {
         });
     }
     closeCommentBox();
-    // save the comment to the database here
+/*  sample database save, will change when we have the database dump
+    $.ajax({
+        type: "POST",
+        url: "databaseConnect.jsp",
+        data: "timestamp=" + $('span.timestamp', commentDOM).attr('rel') +
+                "&comment=" + commentText,
+        failure: function() {
+            alert('Database write failed');
+        }
+    });
+*/
 }
 
 function secondsToTime(secs) {
