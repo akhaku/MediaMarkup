@@ -5,19 +5,18 @@ VideoJS.DOMReady(function(){
 
 $(document).ready(function() {
     $('div#comment-box *').hide();
-    $('button#comment-button').click(function(){
+    $('button#comment-button').click(function() {
         $('div#comment-box *').show();
         $('button#comment-button').hide();
         video.pause();
         $('textarea').focus();
     });
     $('#comment-save').click(function() {
-        saveComment();
+        saveComment(video);
     });
     $('#comment-cancel').click(function() {
         closeCommentBox();
     });
-
 });
 
 function closeCommentBox() {
@@ -26,43 +25,61 @@ function closeCommentBox() {
     $('button#comment-button').show();
 }
 
-function saveComment() {
-    video = VideoJS.setup("video");
-    //escape js here? also guard against XSS
-    var comment = $('textarea').val();
-    var time = video.currentTime();
-    var timeStr = secondsToTime(time);
-    var commentLi = '<li><span class="timestamp" rel="'+time+'">'
-        +timeStr+'</span> - ' + comment+'</li>';
-    // find place for the li element to go
+function saveComment(video) {
+    /* save comment to database and print it to screen in sorted order */
+    var commentTime = video.currentTime();
+    var commentTimeStr = secondsToTime(commentTime);
+    var commentDOM = $('<li><span class="timestamp"></span> - <span ' +
+                       'class="comment"></li>');
+    $('span.timestamp', commentDOM).attr('rel', commentTime);
+    $('span.timestamp', commentDOM).html(commentTimeStr);
+    $('span.timestamp', commentDOM).click(function() {
+        /* move video.currentTime() to the timestamp in rel */
+        video.currentTime($('span.timestamp', commentDOM).attr('rel'));
+    });
+    $('span.comment', commentDOM).text($('textarea').val());
+
     if(!$('ul#master li').get(0)) {
-        $('ul#master').html(commentLi);
+        /* insert the comment into empty ul#master */
+        $('ul#master').append(commentDOM);
     } else {
         $.each($('ul#master li'),function(index) {
+            /* insert the comment to ul#master in sorted order */
             elem = $($('ul#master li').get(index));
-            if ($('.timestamp', elem).attr('rel') > time) {
-                $(elem).before(commentLi);
+            if ($('.timestamp', elem).attr('rel') > commentTime) {
+                $(elem).before(commentDOM);
                 return false;
             }
-            if (index == $('ul#master li').length-1) {
-                $('ul#master li:last-child').after(commentLi);
+            if (index == $('ul#master li').length - 1) {
+                $('ul#master li:last-child').after(commentDOM);
             }
         });
     }
     closeCommentBox();
+/*  sample database save, will change when we have the database dump
+    $.ajax({
+        type: "POST",
+        url: "databaseConnect.jsp",
+        data: "timestamp=" + $('span.timestamp', commentDOM).attr('rel') +
+                "&comment=" + commentText,
+        failure: function() {
+            alert('Database write failed');
+        }
+    });
+*/
 }
-function secondsToTime(secs)
-{
+
+function secondsToTime(secs) {
     var hours = Math.floor(secs / (60 * 60));
-    var divisor_for_minutes = secs % (60 * 60);
-    var minutes = Math.floor(divisor_for_minutes / 60);
-    var divisor_for_seconds = divisor_for_minutes % 60;
-    var seconds = Math.ceil(divisor_for_seconds);
-    if (seconds < 10) { seconds = "0"+seconds; }
+    var divisorMin = secs % (60 * 60);
+    var minutes = Math.floor(divisorMin / 60);
+    var divisorSec = divisorMin % 60;
+    var seconds = Math.ceil(divisorSec);
+    if (seconds < 10) { seconds = "0" + seconds; }
     var str = minutes+":"+seconds;
     if (hours != 0) {
-        if (minutes < 10) { str = "0"+str; }
-        str = hours+":"+str;
+        if (minutes < 10) { str = "0" + str; }
+        str = hours + ":" + str;
     }
     return str;
 }

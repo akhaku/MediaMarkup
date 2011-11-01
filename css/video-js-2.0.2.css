@@ -15,7 +15,8 @@ video.video-js { background-color: #000; position: relative; padding: 0; }
 .vjs-flash-fallback { display: block; }
 
 /* Poster Overlay Style */
-.video-js-box img.vjs-poster { display: block; position: absolute; left: 0; top: 0; width: 100%; height: 100%; margin: 0; padding: 0; cursor: pointer; }
+.video-js-box img.vjs-poster { display: block; position: absolute; left: 0; top:
+0; width: auto; height: 100%; margin: 0; padding: 0; cursor: pointer; }
 /* Subtiles Style */
 .video-js-box .vjs-subtitles { color: #fff; font-size: 20px; text-align: center; position: absolute; bottom: 40px; left: 0; right: 0; }
 
