@@ -1,3 +1,7 @@
+p, li, span {
+    font-family: Helvetica, Arial;
+}
+
 div.video-js-box {
     margin-left: auto;
     margin-right: auto;
