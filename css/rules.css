@@ -19,5 +19,9 @@ span.timestamp:hover {
 }
 
 textarea#comment-text {
-    width: 500px;
+    width: 480px;
+    max-width: 480px;
+    min-width: 480px;
+    height: 64px;
+    min-height: 24px;
 }
