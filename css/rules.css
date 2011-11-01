@@ -29,3 +29,26 @@ textarea#comment-text {
     height: 64px;
     min-height: 24px;
 }
+
+ul#master li {
+    padding: 15px;
+    margin: 5px;
+    width: 250px;
+    border: 1px solid black;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
+.comment-reply {
+    font-size: 10px;
+    color: blue;
+    cursor: pointer;
+    position: absolute;
+    right: 7px;
+    bottom: 7px;
+}
+
+.comment-reply:hover {
+    text-decoration: underline;
+}

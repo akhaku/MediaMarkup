@@ -30,7 +30,8 @@ function saveComment(video) {
     var commentTime = video.currentTime();
     var commentTimeStr = secondsToTime(commentTime);
     var commentDOM = $('<li><span class="timestamp"></span> - <span ' +
-                       'class="comment"></li>');
+                       'class="comment"></span>'+
+                       '<div class="comment-reply">Reply</div></li>');
     $('span.timestamp', commentDOM).attr('rel', commentTime);
     $('span.timestamp', commentDOM).html(commentTimeStr);
     $('span.timestamp', commentDOM).click(function() {
@@ -38,6 +39,10 @@ function saveComment(video) {
         video.currentTime($('span.timestamp', commentDOM).attr('rel'));
     });
     $('span.comment', commentDOM).text($('textarea').val());
+    $('div.comment-reply').click(function(){
+        // Call reply function here
+        console.log('replying now');
+    });
 
     if(!$('ul#master li').get(0)) {
         /* insert the comment into empty ul#master */
@@ -56,8 +61,14 @@ function saveComment(video) {
         });
     }
     closeCommentBox();
-/*  sample database save, will change when we have the database dump
-    $.ajax({
+    /*  sample database save, will change when we have the database dump
+        $.post('databaseConnect.jsp", { timestamp: $('span.timestamp', commentDOM).attr('rel'),
+                            comment: $('span.comment', commentDOM).html()
+        });
+
+        OR
+
+        $.ajax({
         type: "POST",
         url: "databaseConnect.jsp",
         data: "timestamp=" + $('span.timestamp', commentDOM).attr('rel') +
