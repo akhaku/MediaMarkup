@@ -1,3 +1,7 @@
+p, li, span {
+    font-family: Helvetica, Arial;
+}
+
 div.video-js-box {
     margin-top: 12px;
 }
@@ -24,4 +28,33 @@ textarea#comment-text {
     min-width: 480px;
     height: 64px;
     min-height: 24px;
+}
+
+ul#master li.comment-li {
+    font-size: 15px;
+    padding: 15px;
+    margin: 5px;
+    width: 250px;
+    border: 1px solid black;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
+li.comment-li ul.reply-thread li.reply-li {
+    margin: 10px;
+    font-size: 12px;
+}
+
+.comment-reply-button {
+    font-size: 10px;
+    color: blue;
+    cursor: pointer;
+    position: relative;
+    left: 220px;
+    top: 10px;
+}
+
+.comment-reply:hover {
+    text-decoration: underline;
 }
