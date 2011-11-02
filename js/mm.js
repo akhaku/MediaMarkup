@@ -39,7 +39,7 @@ function saveComment(video) {
     $('span.timestamp', commentDOM).html(commentTimeStr);
     $('span.timestamp', commentDOM).click(function() {
         /* move video.currentTime() to the timestamp in rel */
-        video.currentTime($('span.timestamp', commentDOM).attr('rel'));
+            video.currentTime($('span.timestamp', commentDOM).closest('li').attr('rel'));
     });
     $('span.comment', commentDOM).text($('textarea').val());
     $('div.comment-reply-button', commentDOM).click(function(){
