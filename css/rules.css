@@ -30,7 +30,8 @@ textarea#comment-text {
     min-height: 24px;
 }
 
-ul#master li {
+ul#master li.comment-li {
+    font-size: 15px;
     padding: 15px;
     margin: 5px;
     width: 250px;
@@ -40,7 +41,13 @@ ul#master li {
     -webkit-border-radius: 5px;
 }
 
-.comment-reply {
+li.comment-li ul.reply-thread li.reply-li {
+    margin: 5px;
+    padding: 15px;
+    font-size: 12px;
+}
+
+.comment-reply-button {
     font-size: 10px;
     color: blue;
     cursor: pointer;

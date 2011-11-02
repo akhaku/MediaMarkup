@@ -29,33 +29,35 @@ function saveComment(video) {
     /* save comment to database and print it to screen in sorted order */
     var commentTime = video.currentTime();
     var commentTimeStr = secondsToTime(commentTime);
-    var commentDOM = $('<li><span class="timestamp"></span> - <span ' +
-                       'class="comment"></span>'+
-                       '<div class="comment-reply">Reply</div></li>');
-    $('span.timestamp', commentDOM).attr('rel', commentTime);
+    var commentDOM = $('<li class="comment-li">' + 
+            '<span class="timestamp"></span> - <span ' +
+            'class="comment"></span>'+
+            '<div class="comment-reply-button">Reply</div>'+
+            '<ul class="reply-thread"></ul></li>');
+
+    $('span.timestamp', commentDOM).closest('li').attr('rel', commentTime);
     $('span.timestamp', commentDOM).html(commentTimeStr);
     $('span.timestamp', commentDOM).click(function() {
         /* move video.currentTime() to the timestamp in rel */
         video.currentTime($('span.timestamp', commentDOM).attr('rel'));
     });
     $('span.comment', commentDOM).text($('textarea').val());
-    $('div.comment-reply').click(function(){
-        // Call reply function here
-        console.log('replying now');
+    $('div.comment-reply-button', commentDOM).click(function(){
+        replyComment(commentTime);
     });
 
-    if(!$('ul#master li').get(0)) {
+    if(!$('ul#master li.comment-li').get(0)) {
         /* insert the comment into empty ul#master */
         $('ul#master').append(commentDOM);
     } else {
-        $.each($('ul#master li'),function(index) {
+        $.each($('ul#master li.comment-li'),function(index) {
             /* insert the comment to ul#master in sorted order */
-            elem = $($('ul#master li').get(index));
+            elem = $($('ul#master li.comment-li').get(index));
             if ($('.timestamp', elem).attr('rel') > commentTime) {
                 $(elem).before(commentDOM);
                 return false;
             }
-            if (index == $('ul#master li').length - 1) {
+            if (index == $('ul#master li.comment-li').length - 1) {
                 $('ul#master li:last-child').after(commentDOM);
             }
         });
@@ -78,6 +80,19 @@ function saveComment(video) {
         }
     });
 */
+}
+
+function replyComment(commentTime) {
+    var liElem = $('ul#master li[rel="'+commentTime+'"]');
+    var replyText = "this is a reply"; // TODO: this is harcoded for now
+    var replyDOM = $('<li class="reply-li">'+
+            '<span class="reply-text"></span></li>');
+    replyDOM.text(replyText);
+    if (!$('ul.reply-thread li', liElem).get(0)) {
+        liElem.append(replyDOM);
+    } else {
+        $('ul.reply li:last-child').after(replyDOM);
+    }
 }
 
 function secondsToTime(secs) {
