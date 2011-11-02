@@ -60,7 +60,7 @@ function saveComment(video) {
     $.ajax({
         type: "POST",
         url: "databaseConnect.jsp",
-        data: "timestamp=" + $('span.timestamp', commentDOM).attr('rel') +
+        data:   "timestamp=" + $('span.timestamp', commentDOM).attr('rel') +
                 "&comment=" + commentText,
         failure: function() {
             alert('Database write failed');
