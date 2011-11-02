@@ -42,8 +42,7 @@ ul#master li.comment-li {
 }
 
 li.comment-li ul.reply-thread li.reply-li {
-    margin: 5px;
-    padding: 15px;
+    margin: 10px;
     font-size: 12px;
 }
 

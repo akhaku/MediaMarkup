@@ -83,15 +83,15 @@ function saveComment(video) {
 }
 
 function replyComment(commentTime) {
-    var liElem = $('ul#master li[rel="'+commentTime+'"]');
+    var ulElem = $('ul#master li[rel="'+commentTime+'"] ul');
     var replyText = "this is a reply"; // TODO: this is harcoded for now
     var replyDOM = $('<li class="reply-li">'+
             '<span class="reply-text"></span></li>');
     replyDOM.text(replyText);
-    if (!$('ul.reply-thread li', liElem).get(0)) {
-        liElem.append(replyDOM);
+    if (!$('li.reply-li', ulElem).get(0)) {
+        ulElem.append(replyDOM);
     } else {
-        $('ul.reply li:last-child').after(replyDOM);
+        $('li.reply-li:last-child', ulElem).after(replyDOM);
     }
 }
 
