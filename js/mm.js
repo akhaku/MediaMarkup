@@ -53,7 +53,7 @@ function saveComment(video) {
         $.each($('ul#master li.comment-li'),function(index) {
             /* insert the comment to ul#master in sorted order */
             elem = $($('ul#master li.comment-li').get(index));
-            if ($('.timestamp', elem).attr('rel') > commentTime) {
+            if (elem.attr('rel') > commentTime) {
                 $(elem).before(commentDOM);
                 return false;
             }

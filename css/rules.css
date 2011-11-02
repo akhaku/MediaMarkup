@@ -51,9 +51,9 @@ li.comment-li ul.reply-thread li.reply-li {
     font-size: 10px;
     color: blue;
     cursor: pointer;
-    position: absolute;
-    right: 7px;
-    bottom: 7px;
+    position: relative;
+    left: 220px;
+    top: 10px;
 }
 
 .comment-reply:hover {
