@@ -78,14 +78,15 @@ function mmThread_insertComment(video, comment) {
         $('textarea', commentDOM).focus();
     });
 }
-function replyComment(commentTime) {
-    var ulElem = $('ul#master li[rel="'+commentTime+'"] ul');
+
+function mmThread_insertReply(commentThread) {
+    /* comment - comment li jQuery object to thread the reply onto */
+    ulElem = $('ul.reply-thread', commentThread)
     var replyDOM = $('<li class="reply-li"><div class="reply-form">' +
             '<textarea></textarea><br/><button class="save">Save</button>' +
             '<button class="cancel">Cancel</button></div>'+
             '<span class="reply-text"></span></li>');
     $('textarea', replyDOM).focus();
-    //replyDOM.text(replyText);
     if (!$('li.reply-li', ulElem).get(0)) {
         ulElem.append(replyDOM);
     } else {
@@ -98,6 +99,11 @@ function replyComment(commentTime) {
         $('.reply-text', replyDOM).text($('textarea', replyDOM).val());
         $('.reply-form', replyDOM).remove();
     });
+}
+
+function replyComment(commentTime) {
+    var ulElem = $('ul#master li[rel="'+commentTime+'"]');
+    mmThread_insertReply(ulElem);
 }
 
 function mmThread_saveComment(comment, url) {
