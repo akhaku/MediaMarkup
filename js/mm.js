@@ -86,9 +86,10 @@ function replyComment(commentTime) {
     var ulElem = $('ul#master li[rel="'+commentTime+'"] ul');
     var replyText = "this is a reply"; // TODO: this is harcoded for now
     var replyDOM = $('<li class="reply-li"><div class="reply-form">' +
-            '<textarea></textarea><button class="save">Save</button>' +
+            '<textarea></textarea><br/><button class="save">Save</button>' +
             '<button class="cancel">Cancel</button></div>'+
             '<span class="reply-text"></span></li>');
+    $('textarea', replyDOM).focus();
     //replyDOM.text(replyText);
     if (!$('li.reply-li', ulElem).get(0)) {
         ulElem.append(replyDOM);
