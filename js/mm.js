@@ -12,7 +12,8 @@ $(document).ready(function() {
         $('textarea').focus();
     });
     $('#comment-save').click(function() {
-        saveComment(video);
+        mmThread_insertComment(video,$('textarea').val());
+        closeCommentBox();
     });
     $('#comment-cancel').click(function() {
         closeCommentBox();
@@ -25,33 +26,41 @@ function closeCommentBox() {
     $('button#comment-button').show();
 }
 
-function saveComment(video) {
-    /* save comment to database and print it to screen in sorted order */
+function mmThread_load(url) {
+    /* loads a thread from a database, accessed at the url via ajax */
+    /* parses the thread into a jQuery object and inserts into the DOM */
+}
+
+function mmThread_save(thread, url) {
+    /* parses a thread (jQuery object) into either JSON or XML */
+    /* saves the parsed thread to database, accessed at url via ajax */
+}
+
+function mmThread_insertComment(video, comment) {
+    /* thread - jQuery object, video - VideoJS object, comment - string */
+    /* parse the comment text into commentDOM, suitable for insertion */
     var commentTime = video.currentTime();
     var commentTimeStr = secondsToTime(commentTime);
-    var commentDOM = $('<li class="comment-li">' + 
-            '<span class="timestamp"></span> - <span ' +
-            'class="comment"></span>'+
-            '<div class="comment-reply-button">Reply</div>'+
-            '<ul class="reply-thread"></ul></li>');
-
+    var commentDOM = $(
+        '<li class="comment-li">' + 
+            '<span class="timestamp"></span> - ' +
+            '<span class="comment"></span>' +
+        '</li>');
     $('span.timestamp', commentDOM).closest('li').attr('rel', commentTime);
     $('span.timestamp', commentDOM).html(commentTimeStr);
     $('span.timestamp', commentDOM).click(function() {
         /* move video.currentTime() to the timestamp in rel */
-            video.currentTime($('span.timestamp', commentDOM).closest('li').attr('rel'));
+        video.currentTime($('span.timestamp', commentDOM).closest('li').attr('rel'));
     });
-    $('span.comment', commentDOM).text($('textarea').val());
-    $('div.comment-reply-button', commentDOM).click(function(){
-        replyComment(commentTime);
-    });
+    $('span.comment', commentDOM).text(comment);
 
+    /* insert the commentDOM into the ul#master in sorted order */
     if(!$('ul#master li.comment-li').get(0)) {
         /* insert the comment into empty ul#master */
         $('ul#master').append(commentDOM);
     } else {
         $.each($('ul#master li.comment-li'),function(index) {
-            /* insert the comment to ul#master in sorted order */
+            /* insert the comment into nonempty ul#master */
             elem = $($('ul#master li.comment-li').get(index));
             if (elem.attr('rel') > commentTime) {
                 $(elem).before(commentDOM);
@@ -62,47 +71,11 @@ function saveComment(video) {
             }
         });
     }
-    closeCommentBox();
-    /*  sample database save, will change when we have the database dump
-        $.post('databaseConnect.jsp", { timestamp: $('span.timestamp', commentDOM).attr('rel'),
-                            comment: $('span.comment', commentDOM).html()
-        });
-
-        OR
-
-        $.ajax({
-        type: "POST",
-        url: "databaseConnect.jsp",
-        data:   "timestamp=" + $('span.timestamp', commentDOM).attr('rel') +
-                "&comment=" + commentText,
-        failure: function() {
-            alert('Database write failed');
-        }
-    });
-*/
 }
 
-function replyComment(commentTime) {
-    var ulElem = $('ul#master li[rel="'+commentTime+'"] ul');
-    var replyText = "this is a reply"; // TODO: this is harcoded for now
-    var replyDOM = $('<li class="reply-li"><div class="reply-form">' +
-            '<textarea></textarea><br/><button class="save">Save</button>' +
-            '<button class="cancel">Cancel</button></div>'+
-            '<span class="reply-text"></span></li>');
-    $('textarea', replyDOM).focus();
-    //replyDOM.text(replyText);
-    if (!$('li.reply-li', ulElem).get(0)) {
-        ulElem.append(replyDOM);
-    } else {
-        $('li.reply-li:last-child', ulElem).after(replyDOM);
-    }
-    $('button.cancel', replyDOM).click(function() {
-        $(replyDOM).remove();
-    });
-    $('button.save',replyDOM).click(function() {
-        $('.reply-text', replyDOM).text($('textarea', replyDOM).val());
-        $('.reply-form', replyDOM).remove();
-    });
+function mmThread_saveComment(comment, url) {
+    /* parses a comment (jQuery object) into either JSON or XML */
+    /* saves the parsed comment to database, accessed at url via ajax */
 }
 
 function secondsToTime(secs) {
