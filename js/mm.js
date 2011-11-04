@@ -85,14 +85,23 @@ function saveComment(video) {
 function replyComment(commentTime) {
     var ulElem = $('ul#master li[rel="'+commentTime+'"] ul');
     var replyText = "this is a reply"; // TODO: this is harcoded for now
-    var replyDOM = $('<li class="reply-li">'+
+    var replyDOM = $('<li class="reply-li"><div class="reply-form">' +
+            '<textarea></textarea><button class="save">Save</button>' +
+            '<button class="cancel">Cancel</button></div>'+
             '<span class="reply-text"></span></li>');
-    replyDOM.text(replyText);
+    //replyDOM.text(replyText);
     if (!$('li.reply-li', ulElem).get(0)) {
         ulElem.append(replyDOM);
     } else {
         $('li.reply-li:last-child', ulElem).after(replyDOM);
     }
+    $('button.cancel', replyDOM).click(function() {
+        $(replyDOM).remove();
+    });
+    $('button.save',replyDOM).click(function() {
+        $('.reply-text', replyDOM).text($('textarea', replyDOM).val());
+        $('.reply-form', replyDOM).remove();
+    });
 }
 
 function secondsToTime(secs) {
