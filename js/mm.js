@@ -12,7 +12,7 @@ $(document).ready(function() {
         $('textarea').focus();
     });
     $('#comment-save').click(function() {
-        mmThread_insertComment(video,$('textarea').val());
+        mmThread_insertComment(video,$('textarea#comment-text').val());
         closeCommentBox();
     });
     $('#comment-cancel').click(function() {
@@ -21,7 +21,7 @@ $(document).ready(function() {
 });
 
 function closeCommentBox() {
-    $('textarea').val('');   
+    $('textarea#comment-text').val('');   
     $('div#comment-box *').hide();
     $('button#comment-button').show();
 }
@@ -45,6 +45,8 @@ function mmThread_insertComment(video, comment) {
         '<li class="comment-li">' + 
             '<span class="timestamp"></span> - ' +
             '<span class="comment"></span>' +
+            '<div class="reply-button">Reply</div>' +
+            '<ul class="thread" id="' + commentTime + '"></ul>' +
         '</li>');
     $('span.timestamp', commentDOM).closest('li').attr('rel', commentTime);
     $('span.timestamp', commentDOM).html(commentTimeStr);
@@ -53,7 +55,17 @@ function mmThread_insertComment(video, comment) {
         video.currentTime($('span.timestamp', commentDOM).closest('li').attr('rel'));
     });
     $('span.comment', commentDOM).text(comment);
-
+    $('div.reply-button', commentDOM).click(function(commentDOM) {
+        var replyDOM = $(
+            '<li class="reply-li">' +'
+                '<div class="reply-form">' +
+                    '<textarea></textarea><br/>' +
+                    '<button class="save">Save</button>' +
+                    '<button class="cancel">Cancel</button>' +
+                '</div>' +
+                '<span class="reply-text"></span>' +
+            '</li>');
+    });
     /* insert the commentDOM into the ul#master in sorted order */
     if(!$('ul#master li.comment-li').get(0)) {
         /* insert the comment into empty ul#master */
@@ -76,6 +88,16 @@ function mmThread_insertComment(video, comment) {
 function mmThread_saveComment(comment, url) {
     /* parses a comment (jQuery object) into either JSON or XML */
     /* saves the parsed comment to database, accessed at url via ajax */
+}
+
+function mmThread_insertReply(comment, reply) {
+    /* inserts reply at the end of the ul of replies to comment */
+
+}
+
+function mmThread_saveReply(comment, reply, url) {
+    /* parses a reply (jQuery object) into either JSON or XML */
+    /* saves that parsed reply to the database, accessed at url via ajax */
 }
 
 function secondsToTime(secs) {

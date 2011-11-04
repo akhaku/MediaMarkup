@@ -46,7 +46,7 @@ li.comment-li ul.reply-thread li.reply-li {
     font-size: 12px;
 }
 
-.comment-reply-button {
+.reply-button {
     font-size: 10px;
     color: blue;
     cursor: pointer;
