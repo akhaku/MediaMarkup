@@ -73,8 +73,8 @@ function mmThread_insertComment(video, comment) {
             }
         });
     }
-    $('div.comment-reply-button').click(function() {
-        replyComment(commentTime);
+    $('div.comment-reply-button', commentDOM).click(function() {
+        mmThread_insertReply(commentDOM);
         $('textarea', commentDOM).focus();
     });
 }
@@ -99,11 +99,6 @@ function mmThread_insertReply(commentThread) {
         $('.reply-text', replyDOM).text($('textarea', replyDOM).val());
         $('.reply-form', replyDOM).remove();
     });
-}
-
-function replyComment(commentTime) {
-    var ulElem = $('ul#master li[rel="'+commentTime+'"]');
-    mmThread_insertReply(ulElem);
 }
 
 function mmThread_saveComment(comment, url) {
