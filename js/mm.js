@@ -8,15 +8,19 @@ $(document).ready(function() {
     $('button#comment-button').click(function() {
         $('div#comment-box *').show();
         $('button#comment-button').hide();
+        $('button#write-button').hide();
         video.pause();
         $('textarea').focus();
     });
     $('#comment-save').click(function() {
-        mmThread_insertComment(video,$('textarea#comment-text').val());
+        mm_insertComment(video,$('textarea#comment-text').val());
         closeCommentBox();
     });
     $('#comment-cancel').click(function() {
         closeCommentBox();
+    });
+    $('button#write-button').click(function() {
+        mm_writeThread_JSON($('ul#master'),'test.json')
     });
 });
 
@@ -24,19 +28,48 @@ function closeCommentBox() {
     $('textarea#comment-text').val('');   
     $('div#comment-box *').hide();
     $('button#comment-button').show();
+    $('button#write-button').show();
 }
 
-function mmThread_load(url) {
+function mm_loadThread_JSON(url) {
     /* loads a thread from a database, accessed at the url via ajax */
     /* parses the thread into a jQuery object and inserts into the DOM */
 }
 
-function mmThread_save(thread, url) {
+function mm_writeThread_JSON(thread, postURL) {
     /* parses a thread (jQuery object) into either JSON or XML */
     /* saves the parsed thread to database, accessed at url via ajax */
+    var threadJSON = [];
+    $.each($('li.comment-li', thread),function(i) {
+        threadJSON[i] = {
+            time : $(this).attr('rel'),
+            timestring : $('span.timestamp', this).text(),
+            comment : $('span.comment', this).text(),
+            replies : []
+        };
+        if( !$('ul.reply-thread', this).get(0) ) {
+            $.each($('li.reply-li', this),function(j) {
+                threadJSON[i].replies[j] = {
+                    'reply' : $('span.reply-text', this).text()
+                };
+            });
+        }
+    });
+    $.ajax({
+        type : 'POST',
+        url : postURL,
+        dataType: 'json',
+        data : threadJSON,
+        success : function() {
+            console.log('Success!');
+        },
+        error : function() {
+            console.log('Error!\n' + threadJSON[1].comment);
+        }
+    });
 }
 
-function mmThread_insertComment(video, comment) {
+function mm_insertComment(video, comment) {
     /* thread - jQuery object, video - VideoJS object, comment - string */
     /* parse the comment text into commentDOM, suitable for insertion */
     var commentTime = video.currentTime();
@@ -45,13 +78,10 @@ function mmThread_insertComment(video, comment) {
         '<li class="comment-li">' + 
             '<span class="timestamp"></span> - ' +
             '<span class="comment"></span>' +
-<<<<<<< HEAD
             '<div class="reply-button">Reply</div>' +
             '<ul class="thread" id="' + commentTime + '"></ul>' +
-=======
             '<div class="comment-reply-button">Reply</div>'+
             '<ul class="reply-thread"></ul>' +
->>>>>>> 9894fe2e171a3caf5d3b0826acb9b2b3d254ffad
         '</li>');
     $('span.timestamp', commentDOM).closest('li').attr('rel', commentTime);
     $('span.timestamp', commentDOM).html(commentTimeStr);
@@ -62,7 +92,7 @@ function mmThread_insertComment(video, comment) {
     $('span.comment', commentDOM).text(comment);
     $('div.reply-button', commentDOM).click(function(commentDOM) {
         var replyDOM = $(
-            '<li class="reply-li">' +'
+            '<li class="reply-li">' +
                 '<div class="reply-form">' +
                     '<textarea></textarea><br/>' +
                     '<button class="save">Save</button>' +
@@ -89,12 +119,12 @@ function mmThread_insertComment(video, comment) {
         });
     }
     $('div.comment-reply-button', commentDOM).click(function() {
-        mmThread_insertReply(commentDOM);
+        mm_insertReply(commentDOM);
         $('textarea', commentDOM).focus();
     });
 }
 
-function mmThread_insertReply(commentThread) {
+function mm_insertReply(commentThread) {
     /* comment - comment li jQuery object to thread the reply onto */
     ulElem = $('ul.reply-thread', commentThread)
     var replyDOM = $(
@@ -121,17 +151,17 @@ function mmThread_insertReply(commentThread) {
     });
 }
 
-function mmThread_saveComment(comment, url) {
+function mm_saveComment(comment, url) {
     /* parses a comment (jQuery object) into either JSON or XML */
     /* saves the parsed comment to database, accessed at url via ajax */
 }
 
-function mmThread_insertReply(comment, reply) {
+function mm_insertReply(comment, reply) {
     /* inserts reply at the end of the ul of replies to comment */
 
 }
 
-function mmThread_saveReply(comment, reply, url) {
+function mm_saveReply(comment, reply, url) {
     /* parses a reply (jQuery object) into either JSON or XML */
     /* saves that parsed reply to the database, accessed at url via ajax */
 }
