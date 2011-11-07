@@ -45,8 +45,13 @@ function mmThread_insertComment(video, comment) {
         '<li class="comment-li">' + 
             '<span class="timestamp"></span> - ' +
             '<span class="comment"></span>' +
+<<<<<<< HEAD
             '<div class="reply-button">Reply</div>' +
             '<ul class="thread" id="' + commentTime + '"></ul>' +
+=======
+            '<div class="comment-reply-button">Reply</div>'+
+            '<ul class="reply-thread"></ul>' +
+>>>>>>> 9894fe2e171a3caf5d3b0826acb9b2b3d254ffad
         '</li>');
     $('span.timestamp', commentDOM).closest('li').attr('rel', commentTime);
     $('span.timestamp', commentDOM).html(commentTimeStr);
@@ -79,10 +84,41 @@ function mmThread_insertComment(video, comment) {
                 return false;
             }
             if (index == $('ul#master li.comment-li').length - 1) {
-                $('ul#master li:last-child').after(commentDOM);
+                $('ul#master li.comment-li:last-child').after(commentDOM);
             }
         });
     }
+    $('div.comment-reply-button', commentDOM).click(function() {
+        mmThread_insertReply(commentDOM);
+        $('textarea', commentDOM).focus();
+    });
+}
+
+function mmThread_insertReply(commentThread) {
+    /* comment - comment li jQuery object to thread the reply onto */
+    ulElem = $('ul.reply-thread', commentThread)
+    var replyDOM = $(
+        '<li class="reply-li">' +
+            '<div class="reply-form">' +
+                '<textarea></textarea><br/>' +
+                '<button class="save">Save</button>' +
+                '<button class="cancel">Cancel</button>' +
+            '</div>' +
+            '<span class="reply-text"></span>' +
+        '</li>');
+    $('textarea', replyDOM).focus();
+    if (!$('li.reply-li', ulElem).get(0)) {
+        ulElem.append(replyDOM);
+    } else {
+        $('li.reply-li:last-child', ulElem).after(replyDOM);
+    }
+    $('button.cancel', replyDOM).click(function() {
+        $(replyDOM).remove();
+    });
+    $('button.save',replyDOM).click(function() {
+        $('.reply-text', replyDOM).text($('textarea', replyDOM).val());
+        $('.reply-form', replyDOM).remove();
+    });
 }
 
 function mmThread_saveComment(comment, url) {
