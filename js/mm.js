@@ -79,8 +79,6 @@ function mm_insertComment(video, comment) {
             '<span class="timestamp"></span> - ' +
             '<span class="comment"></span>' +
             '<div class="reply-button">Reply</div>' +
-            '<ul class="thread" id="' + commentTime + '"></ul>' +
-            '<div class="comment-reply-button">Reply</div>'+
             '<ul class="reply-thread"></ul>' +
         '</li>');
     $('span.timestamp', commentDOM).closest('li').attr('rel', commentTime);
@@ -90,17 +88,6 @@ function mm_insertComment(video, comment) {
         video.currentTime($('span.timestamp', commentDOM).closest('li').attr('rel'));
     });
     $('span.comment', commentDOM).text(comment);
-    $('div.reply-button', commentDOM).click(function(commentDOM) {
-        var replyDOM = $(
-            '<li class="reply-li">' +
-                '<div class="reply-form">' +
-                    '<textarea></textarea><br/>' +
-                    '<button class="save">Save</button>' +
-                    '<button class="cancel">Cancel</button>' +
-                '</div>' +
-                '<span class="reply-text"></span>' +
-            '</li>');
-    });
     /* insert the commentDOM into the ul#master in sorted order */
     if(!$('ul#master li.comment-li').get(0)) {
         /* insert the comment into empty ul#master */
@@ -118,7 +105,7 @@ function mm_insertComment(video, comment) {
             }
         });
     }
-    $('div.comment-reply-button', commentDOM).click(function() {
+    $('div.reply-button', commentDOM).click(function() {
         mm_insertReply(commentDOM);
         $('textarea', commentDOM).focus();
     });
@@ -126,7 +113,7 @@ function mm_insertComment(video, comment) {
 
 function mm_insertReply(commentThread) {
     /* comment - comment li jQuery object to thread the reply onto */
-    ulElem = $('ul.reply-thread', commentThread)
+    var ulElem = $('ul.reply-thread', commentThread);
     var replyDOM = $(
         '<li class="reply-li">' +
             '<div class="reply-form">' +
