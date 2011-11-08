@@ -46,7 +46,7 @@ li.comment-li ul.reply-thread li.reply-li {
     font-size: 12px;
 }
 
-.reply-button {
+.comment-reply-button {
     font-size: 10px;
     color: blue;
     cursor: pointer;
@@ -55,6 +55,6 @@ li.comment-li ul.reply-thread li.reply-li {
     top: 10px;
 }
 
-.comment-reply:hover {
+.comment-reply-button:hover {
     text-decoration: underline;
 }

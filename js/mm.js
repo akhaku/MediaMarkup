@@ -78,7 +78,7 @@ function mm_insertComment(video, comment) {
         '<li class="comment-li">' + 
             '<span class="timestamp"></span> - ' +
             '<span class="comment"></span>' +
-            '<div class="reply-button">Reply</div>' +
+            '<div class="comment-reply-button">Reply</div>' +
             '<ul class="reply-thread"></ul>' +
         '</li>');
     $('span.timestamp', commentDOM).closest('li').attr('rel', commentTime);
@@ -105,7 +105,7 @@ function mm_insertComment(video, comment) {
             }
         });
     }
-    $('div.reply-button', commentDOM).click(function() {
+    $('div.comment-reply-button', commentDOM).click(function() {
         mm_insertReply(commentDOM);
         $('textarea', commentDOM).focus();
     });
@@ -113,16 +113,11 @@ function mm_insertComment(video, comment) {
 
 function mm_insertReply(commentThread) {
     /* comment - comment li jQuery object to thread the reply onto */
-    var ulElem = $('ul.reply-thread', commentThread);
-    var replyDOM = $(
-        '<li class="reply-li">' +
-            '<div class="reply-form">' +
-                '<textarea></textarea><br/>' +
-                '<button class="save">Save</button>' +
-                '<button class="cancel">Cancel</button>' +
-            '</div>' +
-            '<span class="reply-text"></span>' +
-        '</li>');
+    ulElem = $('ul.reply-thread', commentThread)
+        var replyDOM = $('<li class="reply-li"><div class="reply-form">' +
+                '<textarea></textarea><br/><button class="save">Save</button>' +
+                '<button class="cancel">Cancel</button></div>'+
+                '<span class="reply-text"></span></li>');
     $('textarea', replyDOM).focus();
     if (!$('li.reply-li', ulElem).get(0)) {
         ulElem.append(replyDOM);
@@ -141,11 +136,6 @@ function mm_insertReply(commentThread) {
 function mm_saveComment(comment, url) {
     /* parses a comment (jQuery object) into either JSON or XML */
     /* saves the parsed comment to database, accessed at url via ajax */
-}
-
-function mm_insertReply(comment, reply) {
-    /* inserts reply at the end of the ul of replies to comment */
-
 }
 
 function mm_saveReply(comment, reply, url) {
