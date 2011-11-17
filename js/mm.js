@@ -22,57 +22,24 @@ $(document).ready(function() {
     $('button#write-button').click(function() {
         mm_writeThread_JSON($('ul#master'),'test.json')
     });
+    $.post('mmutil.jsp', {method:'getComments',
+        video_id:'205',
+    },function(data){
+        showComments(data);
+    });
 });
 
-function closeCommentBox() {
-    $('textarea#comment-text').val('');   
-    $('div#comment-box *').hide();
-    $('button#comment-button').show();
-    $('button#write-button').show();
-}
-
-function mm_loadThread_JSON(url) {
-    /* loads a thread from a database, accessed at the url via ajax */
-    /* parses the thread into a jQuery object and inserts into the DOM */
-}
-
-function mm_writeThread_JSON(thread, postURL) {
-    /* parses a thread (jQuery object) into either JSON or XML */
-    /* saves the parsed thread to database, accessed at url via ajax */
-    var threadJSON = [];
-    $.each($('li.comment-li', thread),function(i) {
-        threadJSON[i] = {
-            time : $(this).attr('rel'),
-            timestring : $('span.timestamp', this).text(),
-            comment : $('span.comment', this).text(),
-            replies : []
-        };
-        if( !$('ul.reply-thread', this).get(0) ) {
-            $.each($('li.reply-li', this),function(j) {
-                threadJSON[i].replies[j] = {
-                    'reply' : $('span.reply-text', this).text()
-                };
-            });
-        }
-    });
-    $.ajax({
-        type : 'POST',
-        url : postURL,
-        dataType: 'json',
-        data : threadJSON,
-        success : function() {
-            console.log('Success!');
-        },
-        error : function() {
-            console.log('Error!\n' + threadJSON[1].comment);
-        }
+function showComments(data) {
+    var comments = $.parseJSON(data);
+    /* TODO: un-escape when putting it in */
+    $.each(comments,function(i,v){
+        timeArray = v['timestamp'].split(':');
+        time = parseInt(timeArray[2]) + parseInt(timeArray[1])*60 + parseInt(timeArray[0])*3600;
+    putInComment(time,v['comment']);
     });
 }
 
-function mm_insertComment(video, comment) {
-    /* thread - jQuery object, video - VideoJS object, comment - string */
-    /* parse the comment text into commentDOM, suitable for insertion */
-    var commentTime = video.currentTime();
+function putInComment(commentTime, comment) {
     var commentTimeStr = secondsToTime(commentTime);
     var commentDOM = $(
         '<li class="comment-li">' + 
@@ -109,7 +76,47 @@ function mm_insertComment(video, comment) {
         mm_insertReply(commentDOM);
         $('textarea', commentDOM).focus();
     });
+}
 
+function closeCommentBox() {
+    $('textarea#comment-text').val('');   
+    $('div#comment-box *').hide();
+    $('button#comment-button').show();
+    $('button#write-button').show();
+}
+
+function mm_loadThread_JSON(url) {
+    /* loads a thread from a database, accessed at the url via ajax */
+    /* parses the thread into a jQuery object and inserts into the DOM */;
+}
+
+function mm_writeThread_JSON(thread, postURL) {
+    /* parses a thread (jQuery object) into either JSON or XML */
+    /* saves the parsed thread to database, accessed at url via ajax */
+    var threadJSON = [];
+    $.each($('li.comment-li', thread),function(i) {
+        threadJSON[i] = {
+            time : $(this).attr('rel'),
+            timestring : $('span.timestamp', this).text(),
+            comment : $('span.comment', this).text(),
+            replies : []
+        };
+        if( !$('ul.reply-thread', this).get(0) ) {
+            $.each($('li.reply-li', this),function(j) {
+                threadJSON[i].replies[j] = {
+                    'reply' : $('span.reply-text', this).text()
+                };
+            });
+        }
+    });
+}
+
+function mm_insertComment(video, comment) {
+    /* thread - jQuery object, video - VideoJS object, comment - string */
+    /* parse the comment text into commentDOM, suitable for insertion */
+    var commentTime = video.currentTime();
+    var commentTimeStr = secondsToTime(commentTime);
+    putInComment(commentTime, comment);
     $.post('mmutil.jsp', {method:'saveComment',
         video_id:'205',
         comment:'comment',
