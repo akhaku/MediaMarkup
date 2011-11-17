@@ -109,6 +109,13 @@ function mm_insertComment(video, comment) {
         mm_insertReply(commentDOM);
         $('textarea', commentDOM).focus();
     });
+
+    $.post('mmutil.jsp', {method:'saveComment',
+        video_id:'205',
+        comment:'comment',
+        timestamp: commentTimeStr
+    },function(){alert('posted')});
+   
 }
 
 function mm_insertReply(commentThread) {
