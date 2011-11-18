@@ -1,10 +1,14 @@
-<%@ page import="org.json.simple.JSONObject,org.json.simple.JSONArray,edu.tufts.uit.at.spark.video.SparkVideoDBManager" %>
+<%@ page import="java.util.Vector,java.util.Iterator,org.json.simple.JSONObject,org.json.simple.JSONArray,edu.tufts.uit.at.spark.video.SparkVideoDBManager" %>
 <%
 String method = request.getParameter("method");
 
 if (method.equals("getComments")) {
 JSONObject comment = new JSONObject();
 /* TODO: escape here */
+SparkVideoDBManager manager = new SparkVideoDBManager();
+Vector<Integer> commentIds = manager.getAnnotations(205);
+/* Iterate through them */
+
 comment.put("comment","this is a comment");
 comment.put("timestamp","00:00:22");
 JSONArray comments = new JSONArray();
