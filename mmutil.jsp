@@ -1,19 +1,25 @@
-<%@ page import="java.util.Vector,java.util.Iterator,org.json.simple.JSONObject,org.json.simple.JSONArray,edu.tufts.uit.at.spark.video.SparkVideoDBManager" %>
+<%@ page import="java.util.Vector,java.util.*,java.util.Hashtable,java.util.Iterator,org.json.simple.JSONObject,org.json.simple.JSONArray,edu.tufts.uit.at.spark.video.SparkVideoDBManager" %>
 <%
 String method = request.getParameter("method");
 
 if (method.equals("getComments")) {
-JSONObject comment = new JSONObject();
 /* TODO: escape here */
 SparkVideoDBManager manager = new SparkVideoDBManager();
-Vector<Integer> commentIds = manager.getAnnotations(205);
-/* Iterate through them */
-
-comment.put("comment","this is a comment");
-comment.put("timestamp","00:00:22");
-JSONArray comments = new JSONArray();
-comments.add(comment);
-out.println(comments.toString());
+Integer videoId = 205; /* TODO put in actual id */
+Vector<Integer> commentIds = manager.getAnnotations(videoId);
+for (Integer id : commentIds) {
+    Hashtable<Enum, Object> comment = manager.getAnnotation(id);
+    out.println(comment.keys().toString());
+    out.println(comment.toString());
+    out.println(comment.get("Text"));
+    out.println(comment.getClass().getName());
+    out.println(comment.get("Author"));
+for (Enum= comment.keys(); e.hasMoreElements();)
+   {
+       String str = (String) hash.get( e.nextElement() );
+       out.println (str);
+   }
+}
 }
 
 if (method.equals("saveComment")) {

@@ -30,6 +30,7 @@ $(document).ready(function() {
 });
 
 function showComments(data) {
+    console.log(data);
     var comments = $.parseJSON(data);
     /* TODO: un-escape when putting it in */
     $.each(comments,function(i,v){
