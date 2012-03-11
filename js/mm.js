@@ -22,23 +22,30 @@ $(document).ready(function() {
     $('button#write-button').click(function() {
         mm_writeThread_JSON($('ul#master'),'test.json')
     });
-    $.post('mmutil.jsp', {method:'getComments',
+    $.get('mmutil.jsp', {method:'getComments',
         video_id:'205',
     },function(data){
         showComments(data);
     });
 });
 
+/* Gets GET data from server-side script
+ * @data = json data of the following form:
+ * [{"timestamp": "1:23", "comment": "commenttext"}, {"timestamp": "1:45", 
+ *                                                           "comment": "text"}]
+ */
 function showComments(data) {
     var comments = $.parseJSON(data);
     /* TODO: un-escape when putting it in */
     $.each(comments,function(i,v){
-        timeArray = v['timestamp'].split(':');
-        time = parseInt(timeArray[2]) + parseInt(timeArray[1])*60 + parseInt(timeArray[0])*3600;
-    putInComment(time,v['comment']);
+        putInComment(timeStrtoInt(v['timestamp']), v['comment']);
     });
 }
 
+/* Inserts comment into DOM tree
+ * @param commentTime: time in seconds as int
+ * @param comment: comment text as string
+ */
 function putInComment(commentTime, comment) {
     var commentTimeStr = secondsToTime(commentTime);
     var commentDOM = $(
@@ -170,4 +177,13 @@ function secondsToTime(secs) {
         str = hours + ":" + str;
     }
     return str;
+}
+
+function timeStrtoInt(timeStr) {
+    var timeArray = timeStr.split(':').reverse();
+    var time = 0;
+    for (var i=0; i<timeArray.length; i++) {
+        time += parseInt(timeArray[i]) * Math.pow(60,i);
+    }
+    return time;
 }
