@@ -19,8 +19,7 @@ $(document).ready(function() {
         closeCommentBox();
     });
     $.get('mmutil.jsp', {method:'getComments',
-        videoId:'205',
-    },function(data){
+        videoId:'205'},function(data) {
         showComments(data);
     });
 });
@@ -32,7 +31,7 @@ $(document).ready(function() {
  */
 function showComments(data) {
     var comments = $.parseJSON(data);
-    /* TODO: un-escape when putting it in */
+    /* TODO: potentially un-escape when putting it in */
     $.each(comments,function(i,v){
         putInComment(timeStrtoInt(v['timestamp']), v['comment']);
     });
