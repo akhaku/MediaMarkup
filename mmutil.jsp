@@ -5,7 +5,7 @@ String method = request.getParameter("method");
 if (method.equals("getComments")) {
 /* TODO: escape here */
     SparkVideoDBManager manager = new SparkVideoDBManager();
-    Integer videoId = 205; /* TODO put in actual id */
+    Integer videoId = Integer.parseInt(request.getParameter("videoId"));
     Vector<Integer> commentIds = manager.getAnnotations(videoId);
     JSONArray allComments = new JSONArray();
     for (Integer id : commentIds) {

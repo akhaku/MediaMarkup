@@ -6,7 +6,7 @@
         <link rel="stylesheet" type="text/css" href="css/rules.css" />
         <link rel="stylesheet" type="text/css" href="css/video-js-2.0.2.css" />
         <script
-            src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"
+            src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"
             type="text/javascript"></script>
     </head>
     <body>

@@ -23,7 +23,7 @@ $(document).ready(function() {
         mm_writeThread_JSON($('ul#master'),'test.json')
     });
     $.get('mmutil.jsp', {method:'getComments',
-        video_id:'205',
+        videoId:'205',
     },function(data){
         showComments(data);
     });
@@ -126,7 +126,7 @@ function mm_insertComment(video, comment) {
     putInComment(commentTime, comment);
     $.post('mmutil.jsp', {method:'saveComment',
         video_id:'205',
-        comment:'comment',
+        comment: comment,
         timestamp: commentTimeStr
     },function(){alert('posted')});
    
