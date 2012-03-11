@@ -8,7 +8,6 @@ $(document).ready(function() {
     $('button#comment-button').click(function() {
         $('div#comment-box *').show();
         $('button#comment-button').hide();
-        $('button#write-button').hide();
         video.pause();
         $('textarea').focus();
     });
@@ -18,9 +17,6 @@ $(document).ready(function() {
     });
     $('#comment-cancel').click(function() {
         closeCommentBox();
-    });
-    $('button#write-button').click(function() {
-        mm_writeThread_JSON($('ul#master'),'test.json')
     });
     $.get('mmutil.jsp', {method:'getComments',
         videoId:'205',
@@ -89,7 +85,6 @@ function closeCommentBox() {
     $('textarea#comment-text').val('');   
     $('div#comment-box *').hide();
     $('button#comment-button').show();
-    $('button#write-button').show();
 }
 
 function mm_loadThread_JSON(url) {
@@ -123,12 +118,13 @@ function mm_insertComment(video, comment) {
     /* parse the comment text into commentDOM, suitable for insertion */
     var commentTime = video.currentTime();
     var commentTimeStr = secondsToTime(commentTime);
-    putInComment(commentTime, comment);
     $.post('mmutil.jsp', {method:'saveComment',
         video_id:'205',
         comment: comment,
         timestamp: commentTimeStr
-    },function(){alert('posted')});
+    },function() {
+        putInComment(commentTime, comment);
+    });
    
 }
 

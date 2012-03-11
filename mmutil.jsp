@@ -6,6 +6,7 @@ if (method.equals("getComments")) {
 /* TODO: escape here */
     SparkVideoDBManager manager = new SparkVideoDBManager();
     Integer videoId = Integer.parseInt(request.getParameter("videoId"));
+    /* TODO make sure user has permission to view that video */
     Vector<Integer> commentIds = manager.getAnnotations(videoId);
     JSONArray allComments = new JSONArray();
     for (Integer id : commentIds) {

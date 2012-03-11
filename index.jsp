@@ -30,7 +30,6 @@
         </div>
         <div id="controls">
             <button id="comment-button">Comment</button>
-            <button id="write-button">Write to JSON</button>
             <div id="comment-box"> <!-- Popup comment box -->
                 <button id="comment-save">Save</button>
                 <button id="comment-cancel">Cancel</button><br />
