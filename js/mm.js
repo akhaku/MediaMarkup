@@ -13,10 +13,10 @@ $(document).ready(function() {
     });
     $('#comment-save').click(function() {
         mm_insertComment(video,$('textarea#comment-text').val());
-        closeCommentBox();
+        _closeCommentBox();
     });
     $('#comment-cancel').click(function() {
-        closeCommentBox();
+        _closeCommentBox();
     });
     $.get('mmutil.jsp', {method:'getComments',
         videoId:'205'},function(data) {
@@ -34,6 +34,10 @@ function showComments(data) {
     /* TODO: potentially un-escape when putting it in */
     $.each(comments,function(i,v){
         putInComment(v['id'], timeStrtoInt(v['timestamp']), v['comment']);
+        $.each(v['replies'], function(j, r) {
+            console.log(r);
+            putInReply($('[data-cid='+v['id']+']'), r['reply']);
+        });
     });
 }
 
@@ -44,7 +48,7 @@ function showComments(data) {
 function putInComment(commentId, commentTime, comment) {
     var commentTimeStr = secondsToTime(commentTime);
     var commentDOM = $(
-        '<li class="comment-li" id="'+ commentId +'">' + 
+        '<li class="comment-li" data-cid="'+ commentId +'">' + 
             '<span class="timestamp"></span> - ' +
             '<span class="comment"></span>' +
             '<div class="comment-reply-button">Reply</div>' +
@@ -93,7 +97,7 @@ function putInReply(commentThread, text) {
     }
 }
 
-function closeCommentBox() {
+function _closeCommentBox() {
     $('textarea#comment-text').val('');   
     $('div#comment-box *').hide();
     $('button#comment-button').show();
@@ -135,14 +139,14 @@ function mm_insertComment(video, comment) {
         comment: comment,
         timestamp: commentTimeStr
     },function(commentId) {
-        putInComment(commentId, commentTime, comment);
+        putInComment($.trim(commentId), commentTime, comment);
     });
    
 }
 
 function mm_insertReply(commentThread) {
     /* commentThread - comment li jQuery object to thread the reply onto */
-    var commentId = $(commentThread).attr('id');
+    var commentId = $(commentThread).attr('data-cid');
     var ulElem = $('ul.reply-thread', commentThread)
     var replyDOM = $('<li class="reply-li"><div class="reply-form">' +
             '<textarea></textarea><br/><button class="save">Save</button>' +
@@ -158,7 +162,7 @@ function mm_insertReply(commentThread) {
         var replyText = $('textarea', replyDOM).val();
         $.post('mmutil.jsp', {method:'saveReply',
             comment_id: commentId,
-            reply: $('.reply-text', replyDOM).html()}, function() {
+            reply: replyText}, function() {
                 $('.reply-form', replyDOM).remove();
                 putInReply(commentThread, replyText);
         });

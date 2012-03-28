@@ -9,15 +9,29 @@ if (method.equals("getComments")) {
     /* TODO make sure user has permission to view that video */
     Vector<Integer> commentIds = manager.getAnnotations(videoId);
     JSONArray allComments = new JSONArray();
-    for (Integer id : commentIds) {
-        Hashtable<Enum, Object> comment = manager.getAnnotation(id);
+    for (Integer commentId : commentIds) {
+        Hashtable<Enum, Object> comment = manager.getAnnotation(commentId);
         JSONObject commentJSON = new JSONObject();
         commentJSON.put("id",comment.get(CommentFields.Id));
         commentJSON.put("timestamp",comment.get(CommentFields.Timestamp));
+        commentJSON.put("author",comment.get(CommentFields.Author));
         commentJSON.put("comment",comment.get(CommentFields.Text));
+        JSONArray commentReplies = new JSONArray();
+        String commentIdStr = comment.get(CommentFields.Id).toString();
+        Integer commentIdInt = Integer.parseInt(commentIdStr);
+        Vector<Integer> replyIds = manager.getReplies(commentIdInt);
+        for (Integer replyId : replyIds) {
+            Hashtable<Enum, Object> reply = manager.getReply(replyId);
+            JSONObject replyJSON = new JSONObject();
+            replyJSON.put("id", reply.get(CommentFields.Id));
+            replyJSON.put("author", reply.get(CommentFields.Author));
+            replyJSON.put("reply", reply.get(CommentFields.Text));
+            commentReplies.add(replyJSON);
+        }
+        commentJSON.put("replies", commentReplies);
         allComments.add(commentJSON);
     }
-    out.println(allComments);
+    out.print(allComments);
 }
 
 if (method.equals("saveComment")) {
