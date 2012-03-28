@@ -80,6 +80,19 @@ function putInComment(commentId, commentTime, comment) {
     });
 }
 
+function putInReply(commentThread, text) {
+    var ulElem = $('ul.reply-thread', commentThread)
+    var replyDOM = $('<li class="reply-li">' +
+                        '<span class="reply-text"></span>' +
+                    '</li>');
+    $('.reply-text', replyDOM).text(text);
+    if (!$('li.reply-li', ulElem).get(0)) {
+        ulElem.append(replyDOM);
+    } else {
+        $('li.reply-li:last-child', ulElem).after(replyDOM);
+    }
+}
+
 function closeCommentBox() {
     $('textarea#comment-text').val('');   
     $('div#comment-box *').hide();
@@ -128,29 +141,26 @@ function mm_insertComment(video, comment) {
 }
 
 function mm_insertReply(commentThread) {
-    /* comment - comment li jQuery object to thread the reply onto */
+    /* commentThread - comment li jQuery object to thread the reply onto */
     var commentId = $(commentThread).attr('id');
     var ulElem = $('ul.reply-thread', commentThread)
     var replyDOM = $('<li class="reply-li"><div class="reply-form">' +
             '<textarea></textarea><br/><button class="save">Save</button>' +
-            '<button class="cancel">Cancel</button></div>'+
-            '<span class="reply-text"></span></li>');
+            '<button class="cancel">Cancel</button></div>');
     $('textarea', replyDOM).focus();
     if (!$('li.reply-li', ulElem).get(0)) {
         ulElem.append(replyDOM);
     } else {
         $('li.reply-li:last-child', ulElem).after(replyDOM);
     }
-    $('button.cancel', replyDOM).click(function() {
-        $(replyDOM).remove();
-    });
+    $('button.cancel', replyDOM).click(function() { $(replyDOM).remove(); });
     $('button.save',replyDOM).click(function() {
-        $('.reply-text', replyDOM).text($('textarea', replyDOM).val());
-        $('.reply-form', replyDOM).remove();
+        var replyText = $('textarea', replyDOM).val();
         $.post('mmutil.jsp', {method:'saveReply',
             comment_id: commentId,
             reply: $('.reply-text', replyDOM).html()}, function() {
-            $('.reply-form', replyDOM).remove();
+                $('.reply-form', replyDOM).remove();
+                putInReply(commentThread, replyText);
         });
     });
 }
