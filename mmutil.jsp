@@ -12,6 +12,7 @@ if (method.equals("getComments")) {
     for (Integer id : commentIds) {
         Hashtable<Enum, Object> comment = manager.getAnnotation(id);
         JSONObject commentJSON = new JSONObject();
+        commentJSON.put("id",comment.get(CommentFields.Id));
         commentJSON.put("timestamp",comment.get(CommentFields.Timestamp));
         commentJSON.put("comment",comment.get(CommentFields.Text));
         allComments.add(commentJSON);
@@ -27,6 +28,17 @@ if (method.equals("saveComment")) {
     String timestamp = request.getParameter("timestamp");
     SparkVideoDBManager manager = new SparkVideoDBManager();
     /* TODO get user id from session */
-    manager.addAnnotation(video_id, comment, timestamp, "akhaku01");
+    Integer comment_id = manager.addAnnotation(video_id, comment, timestamp, "akhaku01");
+    out.println(comment_id);
+}
+
+if (method.equals("saveReply")) {
+    Integer comment_id = Integer.parseInt(request.getParameter("comment_id"));
+    String reply = request.getParameter("reply");
+    /* TODO: cleanup, escaping etc. Make sure session user has permission for
+     * the VIDEO of the comment */
+    String user = "akhaku01"; /* TODO get user from session */
+    SparkVideoDBManager manager = new SparkVideoDBManager();
+    manager.addReply(comment_id, reply, user);
 }
 %>
