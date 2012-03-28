@@ -35,7 +35,6 @@ function showComments(data) {
     $.each(comments,function(i,v){
         putInComment(v['id'], timeStrtoInt(v['timestamp']), v['comment']);
         $.each(v['replies'], function(j, r) {
-            console.log(r);
             putInReply($('[data-cid='+v['id']+']'), r['reply']);
         });
     });
